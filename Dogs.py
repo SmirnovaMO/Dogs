@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import messagebox as mb
 from tkinter import ttk
+from typing import AnyStr
+
 import requests
 from PIL import Image, ImageTk
 from io import BytesIO
@@ -11,9 +13,9 @@ def get_dog_image():
         response = requests.get('https://dog.ceo/api/breeds/image/random')
         response.raise_for_status()
         data = response.json()
-        print(data)
-        print(data['message'])
-        print(data['status'])
+        # print(data)
+        # print(data['message'])
+        # print(data['status'])
         return data['message']
     except Exception as e:
         mb.showerror('Ошибка', f'Возникла ошибка при запросе к API {e}')
@@ -42,10 +44,18 @@ def show_image():
             mb.showerror('Ошибка', f'Возникла ошибка при загрузке изображений {e}')
     progress.stop()
 
+
 def prog():
     progress['value'] = 0
     progress.start(30)
     window.after(3000, show_image)
+
+
+def clear():
+    content = notebook.tabs()
+    for tab in content:
+        notebook.forget(tab)
+    mb.showinfo('Информационное сообщение','Все вкладки очищены')
 
 
 window = Tk()
@@ -57,6 +67,9 @@ label.pack(pady=10)
 
 button = ttk.Button(text='Загрузить изображение', command=prog)
 button.pack(pady=10)
+
+button_clear = ttk.Button(text='Очистить вкладки', command=clear)
+button_clear.pack(pady=10)
 
 progress = ttk.Progressbar(mode='determinate', length=300)
 progress.pack(pady=10)
